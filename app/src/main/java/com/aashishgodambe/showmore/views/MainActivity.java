@@ -1,8 +1,10 @@
-package com.aashishgodambe.showmore;
+package com.aashishgodambe.showmore.views;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+
+import com.aashishgodambe.showmore.R;
 
 public class MainActivity extends AppCompatActivity {
 
