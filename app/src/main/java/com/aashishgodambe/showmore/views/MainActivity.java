@@ -14,20 +14,24 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.aashishgodambe.showmore.R;
 import com.aashishgodambe.showmore.adapter.PhotoAdapter;
 import com.aashishgodambe.showmore.models.Photo;
+import com.aashishgodambe.showmore.utils.BaseActivity;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class MainActivity extends AppCompatActivity implements PhotoAdapter.OnItemClickListener {
+public class MainActivity extends BaseActivity implements PhotoAdapter.OnItemClickListener {
 
     private final String TAG = getClass().getSimpleName();
 
@@ -59,11 +63,23 @@ public class MainActivity extends AppCompatActivity implements PhotoAdapter.OnIt
         adapter = new PhotoAdapter(this,this);
         recyclerView.setAdapter(adapter);
 
+        editText.setOnEditorActionListener(new EditText.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                    submitClick();
+                    return true;
+                }
+                return false;
+            }
+        });
+
     }
 
     @OnClick(R.id.button)
     public void submitClick(){
         spinner.setVisibility(View.VISIBLE);
+        hideKeyboard(this);
         viewModel.getPhotos(editText.getText().toString());
         viewModel.itemPagedList.observe(this, new Observer<PagedList<Photo>>() {
             @Override
