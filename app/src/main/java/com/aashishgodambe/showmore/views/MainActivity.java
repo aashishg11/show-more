@@ -80,6 +80,11 @@ public class MainActivity extends BaseActivity implements PhotoAdapter.OnItemCli
 
     @OnClick(R.id.button)
     public void submitClick(){
+        if(!isConnected()){
+           Toast.makeText(this,getString(R.string.internet_unavailable),Toast.LENGTH_SHORT).show();
+           hideKeyboard(this);
+           return;
+        }
         spinner.setVisibility(View.VISIBLE);
         hideKeyboard(this);
         viewModel.getPhotos(editText.getText().toString());
