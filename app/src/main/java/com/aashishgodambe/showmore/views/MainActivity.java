@@ -17,6 +17,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.aashishgodambe.showmore.R;
 import com.aashishgodambe.showmore.adapter.PhotoAdapter;
@@ -26,7 +27,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements PhotoAdapter.OnItemClickListener {
 
     private final String TAG = getClass().getSimpleName();
 
@@ -34,6 +35,7 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView.LayoutManager layoutManager;
     private MainActivityViewModel viewModel;
     private PhotoAdapter adapter;
+    private Toast mToast;
 
     @BindView(R.id.editText)
     EditText editText;
@@ -54,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
 
         viewModel = ViewModelProviders.of(this).get(MainActivityViewModel.class);
 
-        adapter = new PhotoAdapter(this);
+        adapter = new PhotoAdapter(this,this);
         recyclerView.setAdapter(adapter);
 
     }
@@ -70,5 +72,14 @@ public class MainActivity extends AppCompatActivity {
                 spinner.setVisibility(View.INVISIBLE);
             }
         });
+    }
+
+    @Override
+    public void onItemClick(Photo item) {
+        if (mToast != null){
+            mToast.cancel();
+        }
+        mToast = Toast.makeText(this,item.getTitle(),Toast.LENGTH_SHORT);
+        mToast.show();
     }
 }

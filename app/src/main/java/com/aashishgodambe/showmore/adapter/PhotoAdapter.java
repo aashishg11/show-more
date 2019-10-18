@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.paging.PagedListAdapter;
@@ -17,10 +18,12 @@ import com.bumptech.glide.Glide;
 
 public class PhotoAdapter extends PagedListAdapter<Photo, PhotoAdapter.ItemViewHolder> {
     Context mCtx;
+    private OnItemClickListener listener;
 
-    public PhotoAdapter(Context mCtx) {
+    public PhotoAdapter(Context mCtx,OnItemClickListener context) {
         super(DIFF_CALLBACK);
         this.mCtx = mCtx;
+        listener = context;
     }
 
     @NonNull
@@ -34,6 +37,12 @@ public class PhotoAdapter extends PagedListAdapter<Photo, PhotoAdapter.ItemViewH
     public void onBindViewHolder(@NonNull ItemViewHolder holder, int position) {
         Photo item = getItem(position);
 
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                listener.onItemClick(getItem(position));
+            }
+        });
         if (item.getUrlS() != null) {
             Glide.with(mCtx)
                     .load(item.getUrlS())
@@ -60,8 +69,12 @@ public class PhotoAdapter extends PagedListAdapter<Photo, PhotoAdapter.ItemViewH
 
         public ItemViewHolder(View itemView) {
             super(itemView);
-
             imageView = itemView.findViewById(R.id.imageView);
         }
+
+    }
+
+    public interface OnItemClickListener {
+        void onItemClick(Photo item);
     }
 }
