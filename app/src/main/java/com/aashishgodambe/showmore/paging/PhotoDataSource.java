@@ -57,6 +57,7 @@ public class PhotoDataSource extends PageKeyedDataSource<Integer, Photo> {
                     @Override
                     public void onFailure(Call<PhotosResponse> call, Throwable t) {
                         Log.d(TAG, t.getLocalizedMessage());
+                        //TODO : Create a mutable livedata to store the state and send error back to the viewmodel.
                     }
                 });
     }

@@ -53,6 +53,8 @@ public class MainActivity extends BaseActivity implements PhotoAdapter.OnItemCli
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
+        // TODO : Save the query when the app is closed so that the user can start where he left the app.
+
         //setting up recyclerview
         recyclerView = findViewById(R.id.recyclerview);
         recyclerView.setLayoutManager(new GridLayoutManager(this,2));
