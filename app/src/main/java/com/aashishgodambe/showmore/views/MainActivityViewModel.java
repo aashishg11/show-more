@@ -26,18 +26,11 @@ public class MainActivityViewModel extends ViewModel {
                 (new PagedList.Config.Builder())
                         .setEnablePlaceholders(false)
                         .setPageSize(PhotoDataSource.PAGE_SIZE).build();
-        //itemPagedList = (new LivePagedListBuilder<Integer,Photo>(photoDataSourceFactory,pagedListConfig)).build();
-
-
     }
 
     public void getPhotos(String search){
         liveDataSource = photoDataSourceFactory.getItemLiveDataSource(search);
         itemPagedList = (new LivePagedListBuilder<Integer,Photo>(photoDataSourceFactory,pagedListConfig)).build();
-
     }
 
-    public LiveData<PagedList<Photo>> getItemPagedList() {
-        return itemPagedList;
-    }
 }

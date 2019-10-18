@@ -14,7 +14,9 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 
 import com.aashishgodambe.showmore.R;
 import com.aashishgodambe.showmore.adapter.PhotoAdapter;
@@ -36,6 +38,9 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.editText)
     EditText editText;
 
+    @BindView(R.id.progressBar)
+    ProgressBar spinner;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,29 +49,25 @@ public class MainActivity extends AppCompatActivity {
 
         //setting up recyclerview
         recyclerView = findViewById(R.id.recyclerview);
-//        StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(2,
-//                StaggeredGridLayoutManager.VERTICAL);
-//        layoutManager.setGapStrategy(StaggeredGridLayoutManager.GAP_HANDLING_MOVE_ITEMS_BETWEEN_SPANS);
-//        recyclerView.setLayoutManager(layoutManager);
         recyclerView.setLayoutManager(new GridLayoutManager(this,2));
         recyclerView.setHasFixedSize(true);
 
         viewModel = ViewModelProviders.of(this).get(MainActivityViewModel.class);
 
         adapter = new PhotoAdapter(this);
-
-
         recyclerView.setAdapter(adapter);
 
     }
 
     @OnClick(R.id.button)
     public void submitClick(){
+        spinner.setVisibility(View.VISIBLE);
         viewModel.getPhotos(editText.getText().toString());
         viewModel.itemPagedList.observe(this, new Observer<PagedList<Photo>>() {
             @Override
             public void onChanged(PagedList<Photo> photos) {
                 adapter.submitList(photos);
+                spinner.setVisibility(View.INVISIBLE);
             }
         });
     }

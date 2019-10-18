@@ -3,12 +3,17 @@ package com.aashishgodambe.showmore.paging;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.MutableLiveData;
 import androidx.paging.PageKeyedDataSource;
 
 import com.aashishgodambe.showmore.models.Photo;
 import com.aashishgodambe.showmore.models.PhotosResponse;
 import com.aashishgodambe.showmore.network.RetrofitClient;
 import com.aashishgodambe.showmore.utils.Constants;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -37,7 +42,15 @@ public class PhotoDataSource extends PageKeyedDataSource<Integer, Photo> {
                     @Override
                     public void onResponse(Call<PhotosResponse> call, Response<PhotosResponse> response) {
                         if (response.body().getPhotos() != null) {
-                            callback.onResult(response.body().getPhotos().getPhoto(), null, FIRST_PAGE + 1);
+                            Set<String> photoSet= new HashSet<String>();
+                            ArrayList uniquePhotos = new ArrayList();
+                            for (Photo photo : response.body().getPhotos().getPhoto()){
+                                if (!photoSet.contains(photo.getTitle())){
+                                    photoSet.add(photo.getTitle());
+                                    uniquePhotos.add(photo);
+                                }
+                            }
+                            callback.onResult(uniquePhotos, null, FIRST_PAGE + 1);
                         }
                     }
 
@@ -61,8 +74,16 @@ public class PhotoDataSource extends PageKeyedDataSource<Integer, Photo> {
                 .enqueue(new Callback<PhotosResponse>() {
                     @Override
                     public void onResponse(Call<PhotosResponse> call, Response<PhotosResponse> response) {
-                        if (response.body() != null) {
-                            callback.onResult(response.body().getPhotos().getPhoto(), params.key + 1);
+                        if (response.body().getPhotos() != null) {
+                            Set<String> photoSet= new HashSet<String>();
+                            ArrayList uniquePhotos = new ArrayList();
+                            for (Photo photo : response.body().getPhotos().getPhoto()){
+                                if (!photoSet.contains(photo.getTitle())){
+                                    photoSet.add(photo.getTitle());
+                                    uniquePhotos.add(photo);
+                                }
+                            }
+                            callback.onResult(uniquePhotos, params.key + 1);
                         }
                     }
 
@@ -72,4 +93,5 @@ public class PhotoDataSource extends PageKeyedDataSource<Integer, Photo> {
                     }
                 });
     }
+
 }
